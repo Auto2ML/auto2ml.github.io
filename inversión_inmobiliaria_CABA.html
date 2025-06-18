@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversión Inmobiliaria en CABA: Guía de Rentabilidad 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .plot-container {
+            width: 100%;
+            height: 500px;
+        }
+         .stat-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .text-shadow-custom {
+             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center my-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#003554] uppercase tracking-wide">Inversión Inteligente en CABA</h1>
+            <p class="mt-4 text-xl md:text-2xl text-[#0582CA] font-bold text-shadow-custom">Descubra los barrios con mayor rentabilidad para alquiler que el mercado tradicional ignora</p>
+        </header>
+
+        <section id="kpis" class="my-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <div class="stat-card">
+                    <p class="text-lg text-gray-500">Rentabilidad Bruta Anual Promedio</p>
+                    <p class="text-6xl font-extrabold text-[#0077B6]">5.77%</p>
+                    <p class="mt-2 text-gray-600">El rendimiento promedio que un inversor puede esperar en la ciudad.</p>
+                </div>
+                <div class="stat-card">
+                    <p class="text-lg text-gray-500">Años para Recuperar la Inversión</p>
+                    <p class="text-6xl font-extrabold text-[#0077B6]">18.6</p>
+                    <p class="mt-2 text-gray-600">El tiempo promedio necesario para que los alquileres cubran el costo de compra.</p>
+                </div>
+            </div>
+            <p class="text-center mt-8 text-lg text-gray-700 max-w-4xl mx-auto">Estas cifras promedio esconden una realidad crucial: ciertos barrios superan drásticamente estos números, ofreciendo retornos más rápidos y mayores ganancias. La clave es mirar más allá de las zonas premium.</p>
+        </section>
+
+        <section id="paradox" class="my-20 p-8 bg-white rounded-xl shadow-lg">
+             <h2 class="text-3xl font-bold text-center text-[#003554] mb-2">La Paradoja de la Rentabilidad</h2>
+             <p class="text-center text-lg text-gray-700 max-w-3xl mx-auto mb-8">Contrario a la creencia popular, los barrios más caros no son los más rentables para alquilar. Zonas más accesibles ofrecen rendimientos muy superiores debido a una fuerte demanda y precios de compra más bajos.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                     <div class="chart-container">
+                        <canvas id="rentabilidadBarriosChart"></canvas>
+                    </div>
+                </div>
+                <div class="text-gray-700 text-base">
+                    <p class="mb-4">El gráfico demuestra una relación inversa entre el prestigio (y precio) de un barrio y su rendimiento por alquiler. Mientras que un inversor en <strong>Puerto Madero</strong> puede esperar una rentabilidad de solo <strong>3.3%</strong>, en <strong>Villa Lugano</strong> ese número se dispara hasta un <strong>9%</strong>.</p>
+                    <p class="mb-4">Este fenómeno ocurre porque los alquileres en barrios de lujo no crecen en la misma proporción que sus altísimos precios de venta. En cambio, en barrios con gran conectividad y servicios, la demanda de alquiler es constante y robusta, lo que, combinado con un menor costo de entrada, maximiza la rentabilidad.</p>
+                    <p class="font-bold text-[#0077B6]">La estrategia ganadora es clara: priorizar el flujo de caja y la rentabilidad sobre el valor nominal de la propiedad.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="map" class="my-20">
+            <h2 class="text-3xl font-bold text-center text-[#003554] mb-2">Mapa de Oportunidades</h2>
+            <p class="text-center text-lg text-gray-700 max-w-3xl mx-auto mb-8">Explore los barrios más destacados para la inversión. Pase el cursor sobre cada punto para ver sus métricas clave y entender por qué son los líderes en rentabilidad.</p>
+            <div id="mapContainer" class="plot-container bg-gray-200 rounded-xl shadow-inner"></div>
+        </section>
+
+        <section id="ranking" class="my-20">
+             <h2 class="text-3xl font-bold text-center text-[#003554] mb-8">Ranking de Inversión: Los 7 Magníficos</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">📈 Rentabilidad Bruta Anual (%)</h3>
+                    <p class="text-center text-gray-600 mb-4">Porcentaje de ganancia anual antes de gastos sobre el precio de compra.</p>
+                    <div class="chart-container">
+                        <canvas id="rentabilidadRankingChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-4">⏳ Años para Recuperar Inversión</h3>
+                     <p class="text-center text-gray-600 mb-4">Menor número de años significa un retorno de capital más rápido.</p>
+                    <div class="chart-container">
+                        <canvas id="recuperoRankingChart"></canvas>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+
+        <section id="deep-dive" class="my-20">
+            <h2 class="text-3xl font-bold text-center text-[#003554] mb-2">Análisis por Barrio: ¿Qué Impulsa la Demanda?</h2>
+            <p class="text-center text-lg text-gray-700 max-w-3xl mx-auto mb-12">Cada barrio tiene motores únicos que aseguran una baja vacancia y un flujo constante de inquilinos. La clave es entender estas dinámicas locales.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">Villa Lugano</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="luganoDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">Impulsado por la demanda estudiantil de la <strong>UBA (CBC)</strong>, ofrece la rentabilidad más alta de CABA con precios de entrada muy bajos. Ideal para inversores que buscan maximizar el retorno rápidamente.</p>
+                    <div class="text-center mt-4 text-2xl">🎓 🚌</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">La Boca</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="bocaDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">Su atractivo <strong>turístico y cultural</strong> y una bajísima tasa de vacancia (<4%) garantizan una ocupación casi constante. La demanda es impulsada por el sector servicios y su vibrante vida local.</p>
+                    <div class="text-center mt-4 text-2xl">🎭 🚢</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">Parque Patricios</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="patriciosDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">El <strong>Distrito Tecnológico</strong> es un imán para profesionales calificados, asegurando inquilinos con ingresos estables. Una zona en plena transformación con gran potencial de revalorización.</p>
+                    <div class="text-center mt-4 text-2xl">💻 🏢</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">Balvanera</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="balvaneraDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">Un hub de <strong>universidades y centros comerciales</strong> como Once y Abasto. Su ubicación central y conectividad inigualable atraen a una base de inquilinos diversa y robusta.</p>
+                     <div class="text-center mt-4 text-2xl">🎓 🚇 🛍️</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">Flores</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="floresDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">La dinámica del <strong>centro comercial mayorista</strong> de Av. Avellaneda genera una demanda laboral y residencial constante, resultando en una tasa de vacancia muy baja (<4%) y alquileres rápidos.</p>
+                    <div class="text-center mt-4 text-2xl">👕 🚂</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3 class="text-2xl font-bold text-[#003554]">Nueva Pompeya</h3>
+                    <div class="w-full h-48 mx-auto my-4">
+                        <canvas id="pompeyaDonut"></canvas>
+                    </div>
+                    <p class="text-center text-gray-700">La reactivación <strong>industrial y su excelente conectividad</strong> atraen a trabajadores que buscan vivienda asequible y bien comunicada. Un mercado con alta rentabilidad y demanda estable.</p>
+                    <div class="text-center mt-4 text-2xl">🏭 🚌</div>
+                </div>
+
+            </div>
+        </section>
+        
+        <section id="strategy" class="my-20 p-8 bg-white rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center text-[#003554] mb-8">La Fórmula Ganadora: Estrategias Clave</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="text-gray-700">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">1. Invierta en Unidades Pequeñas</h3>
+                    <p class="mb-4">Los datos son claros: los <strong>monoambientes y departamentos de 2 ambientes</strong> son los reyes de la rentabilidad. Su menor costo de compra y mantenimiento, junto con una demanda más amplia (estudiantes, jóvenes profesionales, parejas), maximiza el retorno neto.</p>
+                    <div class="chart-container h-64">
+                        <canvas id="unidadesRentabilidadChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                     <h3 class="text-2xl font-bold text-gray-800 mb-4">2. Siga el Proceso del Inversor Exitoso</h3>
+                     <p class="mb-6">Atraer y retener inquilinos es tan importante como la compra. Siga estos pasos para asegurar el éxito de su inversión.</p>
+                     <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="bg-[#0077B6] text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">1</div>
+                            <p class="ml-4 text-lg"><strong>Análisis de Demanda Local:</strong> Investigue los motores del barrio (universidades, oficinas, etc.).</p>
+                        </div>
+                        <div class="h-8 ml-5 border-l-2 border-dashed border-[#0077B6]"></div>
+                        <div class="flex items-center">
+                            <div class="bg-[#0096C7] text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">2</div>
+                            <p class="ml-4 text-lg"><strong>Cálculo de Rentabilidad Neta:</strong> Descuente impuestos, expensas y mantenimiento.</p>
+                        </div>
+                         <div class="h-8 ml-5 border-l-2 border-dashed border-[#0096C7]"></div>
+                        <div class="flex items-center">
+                            <div class="bg-[#00B4D8] text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">3</div>
+                            <p class="ml-4 text-lg"><strong>Precio Competitivo:</strong> Fije un alquiler acorde al mercado para una ocupación rápida.</p>
+                        </div>
+                         <div class="h-8 ml-5 border-l-2 border-dashed border-[#00B4D8]"></div>
+                         <div class="flex items-center">
+                            <div class="bg-[#48CAE4] text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">4</div>
+                            <p class="ml-4 text-lg"><strong>Mantenimiento Proactivo:</strong> Una propiedad en buen estado atrae y retiene mejores inquilinos.</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center my-12 border-t pt-8 text-gray-500">
+             <p class="font-bold text-lg text-[#003554]">Conclusión del Inversor</p>
+            <p class="max-w-4xl mx-auto mt-2">La inversión inmobiliaria más rentable en CABA no está en las portadas de las revistas de lujo, sino en los barrios vibrantes y trabajadores que forman el corazón de la ciudad. Al enfocarse en la rentabilidad neta, la demanda local y las unidades pequeñas, los inversores pueden descubrir oportunidades de crecimiento excepcionales y construir un patrimonio sólido y rentable.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const primaryColor = '#0077B6';
+            const secondaryColor = '#00B4D8';
+            const accentColor = '#FFC300';
+            const textColor = '#051923';
+            const palette = ['#0077B6', '#0096C7', '#00B4D8', '#48CAE4', '#90E0EF', '#ADE8F4'];
+            const lowYieldColor = '#FF6384';
+            
+            const wrapLabel = (str, maxWidth = 16) => {
+                if (typeof str !== 'string' || str.length <= maxWidth) {
+                    return str;
+                }
+                const words = str.split(' ');
+                let lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxWidth) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                         labels: {
+                            color: textColor
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: (tooltipItems) => {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: textColor },
+                        grid: { color: '#e0e0e0' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { display: false }
+                    }
+                }
+            };
+            
+            const donutChartOptions = {
+                 responsive: true,
+                 maintainAspectRatio: false,
+                 cutout: '70%',
+                 plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (tooltipItems) => {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            },
+                             label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const data = {
+                barrios: [
+                    { name: 'Villa Lugano', rentabilidad: 9.0, recupero: 11.0, precioM2: 1019, lat: -34.6858, lon: -58.4556, vacancia: 'N/A' },
+                    { name: 'Nueva Pompeya', rentabilidad: 8.4, recupero: 12.0, precioM2: 1396, lat: -34.6500, lon: -58.4167, vacancia: 'N/A' },
+                    { name: 'Parque Avellaneda', rentabilidad: 7.5, recupero: 15.8, precioM2: 1508, lat: -34.6456, lon: -58.4786, vacancia: 'N/A' },
+                    { name: 'La Boca', rentabilidad: 7.1, recupero: 15.8, precioM2: 1118, lat: -34.6356, lon: -58.3647, vacancia: '<4%' },
+                    { name: 'Balvanera', rentabilidad: 6.8, recupero: 17.8, precioM2: 1431, lat: -34.6090, lon: -58.4013, vacancia: 'N/A' },
+                    { name: 'Flores', rentabilidad: 5.5, recupero: 18.4, precioM2: 1585, lat: -34.6333, lon: -58.4667, vacancia: '<4%' },
+                    { name: 'Parque Patricios', rentabilidad: 8.0, recupero: 13.0, precioM2: 1650, lat: -34.6386, lon: -58.4058, vacancia: '<4%' }
+                ],
+                bajos: [
+                    { name: 'Puerto Madero', rentabilidad: 3.3, recupero: 30.0 },
+                    { name: 'Palermo', rentabilidad: 4.2, recupero: 23.8 },
+                    { name: 'Belgrano', rentabilidad: 4.4, recupero: 22.7 },
+                ],
+                unidades: [
+                    { tipo: 'Monoambiente', rentabilidad: 8.0 },
+                    { tipo: '2 Ambientes', rentabilidad: 5.0 },
+                    { tipo: '3 Ambientes', rentabilidad: 5.4 },
+                    { tipo: '4 Ambientes', rentabilidad: 6.2 },
+                ]
+            };
+
+            const sortedByRentabilidad = [...data.barrios].sort((a, b) => b.rentabilidad - a.rentabilidad);
+            const sortedByRecupero = [...data.barrios].sort((a, b) => a.recupero - b.recupero);
+
+            new Chart(document.getElementById('rentabilidadBarriosChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Villa Lugano', 'Puerto Madero', 'Balvanera', 'Palermo'],
+                    datasets: [{
+                        label: 'Rentabilidad Anual (%)',
+                        data: [9.0, 3.3, 6.8, 4.2],
+                        backgroundColor: [primaryColor, lowYieldColor, primaryColor, lowYieldColor],
+                        borderColor: [primaryColor, lowYieldColor, primaryColor, lowYieldColor],
+                        borderWidth: 1
+                    }]
+                },
+                options: defaultChartOptions
+            });
+
+            new Chart(document.getElementById('rentabilidadRankingChart'), {
+                type: 'bar',
+                data: {
+                    labels: sortedByRentabilidad.map(b => b.name),
+                    datasets: [{
+                        label: 'Rentabilidad Anual (%)',
+                        data: sortedByRentabilidad.map(b => b.rentabilidad),
+                        backgroundColor: palette,
+                    }]
+                },
+                options: { ...defaultChartOptions, indexAxis: 'y' }
+            });
+            
+            new Chart(document.getElementById('recuperoRankingChart'), {
+                type: 'bar',
+                data: {
+                    labels: sortedByRecupero.map(b => b.name),
+                    datasets: [{
+                        label: 'Años para Recuperar Inversión',
+                        data: sortedByRecupero.map(b => b.recupero),
+                        backgroundColor: palette.slice().reverse(),
+                    }]
+                },
+                options: { ...defaultChartOptions, indexAxis: 'y' }
+            });
+            
+            const createDonut = (id, label, value, color) => {
+                 new Chart(document.getElementById(id), {
+                    type: 'doughnut',
+                    data: {
+                        labels: [label, 'Resto'],
+                        datasets: [{
+                            label: 'Rentabilidad',
+                            data: [value, 10 - value], 
+                            backgroundColor: [color, '#e9ecef'],
+                            borderColor: ['#ffffff']
+                        }]
+                    },
+                    options: donutChartOptions
+                });
+            };
+
+            createDonut('luganoDonut', 'Villa Lugano', 9.0, palette[0]);
+            createDonut('bocaDonut', 'La Boca', 7.1, palette[1]);
+            createDonut('patriciosDonut', 'P. Patricios', 8.0, palette[2]);
+            createDonut('balvaneraDonut', 'Balvanera', 6.8, palette[3]);
+            createDonut('floresDonut', 'Flores', 5.5, palette[4]);
+            createDonut('pompeyaDonut', 'N. Pompeya', 8.4, palette[5]);
+            
+             new Chart(document.getElementById('unidadesRentabilidadChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.unidades.map(u => u.tipo),
+                    datasets: [{
+                        label: 'Rentabilidad Promedio (%)',
+                        data: data.unidades.map(u => u.rentabilidad),
+                        backgroundColor: [palette[0], palette[2], palette[4], palette[5]],
+                    }]
+                },
+                options: defaultChartOptions
+            });
+
+            const mapData = [{
+                type: 'scattermapbox',
+                lat: data.barrios.map(b => b.lat),
+                lon: data.barrios.map(b => b.lon),
+                mode: 'markers',
+                marker: {
+                    size: data.barrios.map(b => b.rentabilidad * 3),
+                    color: data.barrios.map(b => b.rentabilidad),
+                    colorscale: [[0, lowYieldColor], [0.5, accentColor], [1, primaryColor]],
+                    showscale: true,
+                    colorbar: {
+                        title: 'Rentabilidad',
+                        ticksuffix: '%'
+                    }
+                },
+                text: data.barrios.map(b => 
+                    `<b>${b.name}</b><br>Rentabilidad: ${b.rentabilidad}%<br>Recupero: ${b.recupero} años<br>Vacancia: ${b.vacancia}`
+                ),
+                hoverinfo: 'text'
+            }];
+
+            const mapLayout = {
+                mapbox: {
+                    style: 'carto-positron',
+                    center: { lat: -34.62, lon: -58.44 },
+                    zoom: 11
+                },
+                margin: { r: 0, t: 0, b: 0, l: 0 },
+                showlegend: false
+            };
+
+            Plotly.newPlot('mapContainer', mapData, mapLayout, { responsive: true });
+
+        });
+    </script>
+</body>
+</html>
