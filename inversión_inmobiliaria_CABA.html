@@ -234,7 +234,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            Chart.register(ChartDataLabels);
 
             const primaryColor = '#0077B6';
             const secondaryColor = '#00B4D8';
@@ -379,6 +378,7 @@
                         backgroundColor: palette,
                     }]
                 },
+                plugins: [ChartDataLabels],
                 options: { 
                     ...defaultChartOptions, 
                     indexAxis: 'y',
@@ -404,6 +404,7 @@
                         backgroundColor: palette.slice().reverse(),
                     }]
                 },
+                plugins: [ChartDataLabels],
                 options: { 
                     ...defaultChartOptions, 
                     indexAxis: 'y',
