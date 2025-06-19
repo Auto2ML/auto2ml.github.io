@@ -6,6 +6,7 @@
     <title>Inversión Inmobiliaria en CABA: Guía de Rentabilidad 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -233,6 +234,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            Chart.register(ChartDataLabels);
 
             const primaryColor = '#0077B6';
             const secondaryColor = '#00B4D8';
@@ -277,14 +279,6 @@
                                 return Array.isArray(label) ? label.join(' ') : label;
                             }
                         }
-                    },
-                    datalabels: {
-                        display: true,
-                        color: 'white',
-                        font: {
-                            weight: 'bold'
-                        },
-                        formatter: (value) => value
                     }
                 },
                 scales: {
@@ -394,7 +388,7 @@
                             display: true,
                             color: 'white',
                             font: { weight: 'bold' },
-                            formatter: (value) => value + '%'
+                            formatter: (value) => value.toFixed(1) + '%'
                         }
                     }
                 }
@@ -419,7 +413,7 @@
                             display: true,
                             color: 'white',
                             font: { weight: 'bold' },
-                            formatter: (value) => value + ' años'
+                            formatter: (value) => value.toFixed(1) + ' años'
                         }
                     }
                 }
