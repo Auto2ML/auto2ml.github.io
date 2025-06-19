@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demos - Auto²ML Solutions</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        .demo-card {
+            background: var(--accent-bg);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .demo-card h3 {
+            color: var(--primary-color);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .demo-card p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .demo-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .demo-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="../index.html" class="back-link">← Back to Auto²ML</a>
+            <img src="../img/logo.png" alt="Auto2ML Logo" class="logo">
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Interactive Solution Demos</h1>
+                <p class="subtitle">Explore real-world examples of how Auto²ML transforms complex problems into intelligent solutions. Each demo showcases our AI's ability to analyze data, communicate insights, and deliver actionable results.</p>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Available Demonstrations</h2>
+                
+                <div class="demo-card">
+                    <h3>🦠 COVID-19 Social Media Sentiment Analysis</h3>
+                    <div class="demo-meta">
+                        <span class="demo-tag">Sentiment Analysis</span>
+                        <span class="demo-tag">Data Visualization</span>
+                        <span class="demo-tag">Interactive Dashboard</span>
+                    </div>
+                    <p>An interactive exploration of how the COVID-19 pandemic reshaped public sentiment across social media platforms. This demo showcases our AI's ability to process complex social data, identify meaningful patterns, and present findings through engaging visualizations.</p>
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li>Multi-platform sentiment tracking (Reddit, Instagram, Twitter)</li>
+                        <li>Topic-specific emotional analysis (education, policy, lifestyle)</li>
+                        <li>Interactive charts and progressive data exploration</li>
+                        <li>Methodological transparency and challenge acknowledgment</li>
+                    </ul>
+                    <div style="margin-top: 25px;">
+                        <a href="COVID-19_interactive.html" class="btn-primary">Dashboard</a>
+                        
+                    </div>
+                </div>
+
+                <div class="demo-card" style="opacity: 0.6;">
+                    <h3>📊 Financial Market Prediction Engine</h3>
+                    <div class="demo-meta">
+                        <span class="demo-tag">Predictive Analytics</span>
+                        <span class="demo-tag">Financial Data</span>
+                        <span class="demo-tag">Coming Soon</span>
+                    </div>
+                    <p>Real-time market analysis and prediction system that processes multiple data streams to forecast market movements and identify trading opportunities.</p>
+                    <div style="margin-top: 25px;">
+                        <button class="btn-secondary" style="opacity: 0.5; cursor: not-allowed;">Coming Soon</button>
+                    </div>
+                </div>
+
+                <div class="demo-card" style="opacity: 0.6;">
+                    <h3>🎯 Customer Behavior Intelligence</h3>
+                    <div class="demo-meta">
+                        <span class="demo-tag">Behavioral Analysis</span>
+                        <span class="demo-tag">Customer Intelligence</span>
+                        <span class="demo-tag">Coming Soon</span>
+                    </div>
+                    <p>Advanced customer segmentation and behavior prediction system that helps businesses understand and anticipate customer needs for targeted marketing and improved retention.</p>
+                    <div style="margin-top: 25px;">
+                        <button class="btn-secondary" style="opacity: 0.5; cursor: not-allowed;">Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Build Your Own Solution?</h2>
+                <p>These demos represent just a fraction of what's possible with Auto²ML. Let us create custom intelligent solutions tailored to your specific business challenges.</p>
+                <div class="cta-buttons">
+                    <a href="../index.html#contact" class="btn-primary">Start Your Project</a>
+                    <a href="../index.html" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Auto²ML. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
