@@ -4,239 +4,441 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Analysis: COVID-19 & Social Media Sentiment</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals with Calm Blues -->
-    <!-- Application Structure Plan: The application is designed as a top-down narrative dashboard. It starts with the most significant, overarching finding (the general increase in negativity) and then allows the user to progressively drill down into more granular details: thematic variations, platform-specific differences, and finally, the methodological context. This structure was chosen to guide the user from a simple, high-level understanding to a more nuanced one, using interactive elements like tabs and buttons to prevent information overload. This is more intuitive than mirroring the report's academic structure, making the key takeaways immediately accessible while still providing depth for those who wish to explore. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Reddit sentiment odds change (2019-2022). Goal: Show change over time. Viz: Bar Chart. Interaction: Hover for details. Justification: A bar chart is excellent for comparing discrete yearly values and clearly shows the 2020 spike and subsequent partial recovery. Library: Chart.js.
-        - Report Info: Sentiment variation by topic (Learning, Alcohol, etc.). Goal: Compare sentiment on different subjects. Viz: Tabbed content with stat cards and simple charts. Interaction: Click tabs to switch topics. Justification: Tabs organize complex, multi-faceted data cleanly, preventing a cluttered layout and allowing users to focus on one topic at a time. Library: Custom JS.
-        - Report Info: Instagram sentiment shift (Positive vs. Neutral). Goal: Show change in distribution. Viz: Grouped Bar Chart. Interaction: Hover. Justification: Clearly illustrates the inverse relationship between the decrease in positive sentiment and the increase in neutral sentiment. Library: Chart.js.
-        - Report Info: Methodologies & Challenges. Goal: Organize and inform about technical aspects. Viz: HTML/CSS styled accordion. Interaction: Click to expand/collapse. Justification: An accordion presents dense, supplementary information compactly, without overwhelming the user. It keeps the focus on the data story but provides context on demand. Method: HTML/CSS/JS. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #2d3436;
+            --primary-color: #e84342;
+            --text-color: #fdfdfd;
+            --accent-bg: rgba(0,0,0,0.1);
+            --card-bg: rgba(255,255,255,0.05);
+            --font-heading: 'Roboto Slab', serif;
+            --font-body: 'Roboto', sans-serif;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #374151;
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.6;
         }
-        .nav-link {
-            transition: color 0.3s ease, border-bottom-color 0.3s ease;
-            border-bottom: 2px solid transparent;
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        .nav-link:hover, .nav-link.active {
-            color: #2563EB;
-            border-bottom-color: #2563EB;
+
+        .header {
+            padding: 20px 0;
+            text-align: center;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .logo {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section:nth-child(even) {
+            background-color: var(--accent-bg);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
         .stat-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            border: 1px solid #F3F4F6;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .tab-button {
-            transition: all 0.3s ease;
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
         }
-        .tab-button.active {
-            background-color: #3B82F6;
-            color: white;
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 5px;
         }
+
+        .stat-description {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
         .chart-container {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+
+        .chart-wrapper {
             position: relative;
-            margin: auto;
-            height: 40vh;
-            max-height: 400px;
-            width: 100%;
+            height: 400px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-button:hover,
+        .tab-button.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .topic-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            min-height: 300px;
+        }
+
+        .topic-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .topic-description {
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .topic-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .accordion {
             max-width: 800px;
+            margin: 0 auto;
         }
-         .accordion-content {
-            max-height: 0;
+
+        .accordion-item {
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
         }
-        .accordion-button.open + .accordion-content {
-             max-height: 500px;
+
+        .accordion-button {
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            text-align: left;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
+        .accordion-button:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
         .accordion-icon {
-            transition: transform 0.5s ease;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
         }
+
         .accordion-button.open .accordion-icon {
             transform: rotate(180deg);
         }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-button.open + .accordion-content {
+            max-height: 200px;
+        }
+
+        .accordion-text {
+            padding: 0 20px 20px 20px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .topic-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm border-b border-gray-200">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold text-gray-800">Pandemic Sentiment Analysis</h1>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#overview" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Overview</a>
-                        <a href="#thematic-deep-dive" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Thematic Deep Dive</a>
-                        <a href="#platform-comparison" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Platform Comparison</a>
-                        <a href="#methods" class="nav-link px-3 py-2 text-sm font-medium text-gray-600">Methods & Challenges</a>
-                    </div>
-                </div>
-                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#overview" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-600">Overview</a>
-                <a href="#thematic-deep-dive" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-600">Thematic Deep Dive</a>
-                <a href="#platform-comparison" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-600">Platform Comparison</a>
-                <a href="#methods" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-gray-600">Methods & Challenges</a>
-            </div>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="back-link">← Back to Demos</a>
+            <img src="../img/logo.png" alt="Auto2ML Logo" class="logo">
         </div>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-
-        <section id="hero" class="text-center mb-16 md:mb-24">
-            <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">The Digital Emotional Footprint of a Global Crisis</h2>
-            <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-600">
-                An interactive exploration of how the COVID-19 pandemic reshaped public sentiment on social media. The data reveals a dramatic initial surge in negativity, followed by nuanced, topic-specific emotional responses and a gradual, partial recovery.
-            </p>
-        </section>
-
-        <section id="overview" class="scroll-mt-20 mb-16 md:mb-24">
-            <div class="text-center mb-12">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-900">The Big Picture: A Surge in Negativity</h3>
-                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-500">
-                    Across platforms, the onset of the pandemic triggered a statistically significant increase in negative sentiment compared to the pre-pandemic baseline. This chart illustrates the trend on Reddit, showing a sharp spike in 2020 and a slow, incomplete return towards 2019 levels in subsequent years.
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>The Digital Emotional Footprint of a Global Crisis</h1>
+                <p class="subtitle">
+                    An interactive exploration of how the COVID-19 pandemic reshaped public sentiment on social media. The data reveals a dramatic initial surge in negativity, followed by nuanced, topic-specific emotional responses and a gradual, partial recovery.
                 </p>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                <div class="lg:col-span-2">
-                    <div class="chart-container bg-white p-4 rounded-lg shadow-md border border-gray-100">
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">The Big Picture: A Surge in Negativity</h2>
+                <p class="section-subtitle">
+                    Across platforms, the onset of the pandemic triggered a statistically significant increase in negative sentiment compared to the pre-pandemic baseline.
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">+25%</div>
+                        <div class="stat-label">Higher Odds of Negative Sentiment</div>
+                        <div class="stat-description">In 2020 vs. 2019 on Reddit (p < 0.001)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">16.2%</div>
+                        <div class="stat-label">Relative Increase in Negativity</div>
+                        <div class="stat-description">Reddit posts went from 35.9% negative in 2019 to 41.8% in 2020</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-wrapper">
                         <canvas id="redditSentimentChart"></canvas>
                     </div>
                 </div>
-                <div class="space-y-4">
-                    <div class="stat-card">
-                        <p class="text-4xl font-bold text-red-600">+25%</p>
-                        <p class="text-md font-semibold text-gray-700 mt-1">Higher Odds of Negative Sentiment</p>
-                        <p class="text-sm text-gray-500">In 2020 vs. 2019 on Reddit (p < 0.001).</p>
-                    </div>
-                     <div class="stat-card">
-                        <p class="text-4xl font-bold text-blue-600">16.2%</p>
-                        <p class="text-md font-semibold text-gray-700 mt-1">Relative Increase in Negativity</p>
-                        <p class="text-sm text-gray-500">Reddit posts went from 35.9% negative in 2019 to 41.8% in 2020.</p>
-                    </div>
-                </div>
             </div>
         </section>
 
-        <section id="thematic-deep-dive" class="scroll-mt-20 mb-16 md:mb-24">
-            <div class="text-center mb-12">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-900">A Deeper Dive: Sentiment by Topic</h3>
-                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-500">
-                    The pandemic's emotional impact was not monolithic. Public sentiment varied dramatically depending on the specific topic being discussed. Select a theme below to explore these highly contextual emotional reactions.
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">A Deeper Dive: Sentiment by Topic</h2>
+                <p class="section-subtitle">
+                    The pandemic's emotional impact was not monolithic. Public sentiment varied dramatically depending on the specific topic being discussed.
                 </p>
-            </div>
 
-            <div class="flex justify-center flex-wrap gap-2 mb-8">
-                <button class="tab-button active py-2 px-4 rounded-full text-sm font-semibold bg-gray-200 text-gray-700" data-topic="learning">🎓 Learning & Education</button>
-                <button class="tab-button py-2 px-4 rounded-full text-sm font-semibold bg-gray-200 text-gray-700" data-topic="coping">🍻 Coping & Lifestyle</button>
-                <button class="tab-button py-2 px-4 rounded-full text-sm font-semibold bg-gray-200 text-gray-700" data-topic="policy">🏛️ Policy & Measures</button>
-            </div>
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-topic="learning">🎓 Learning & Education</button>
+                    <button class="tab-button" data-topic="coping">🍻 Coping & Lifestyle</button>
+                    <button class="tab-button" data-topic="policy">🏛️ Policy & Measures</button>
+                </div>
 
-            <div id="topic-content-area" class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-100 min-h-[300px]">
+                <div id="topic-content-area" class="topic-content">
+                </div>
             </div>
         </section>
         
-        <section id="platform-comparison" class="scroll-mt-20 mb-16 md:mb-24">
-            <div class="text-center mb-12">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-900">Platform Comparison: A Nuanced Landscape</h3>
-                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-500">
-                    Different social media platforms revealed distinct sentiment patterns. While Reddit saw a clear spike in negativity, Instagram experienced a shift away from positive expression towards a more neutral, cautious tone.
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Platform Comparison: A Nuanced Landscape</h2>
+                <p class="section-subtitle">
+                    Different social media platforms revealed distinct sentiment patterns. While Reddit saw a clear spike in negativity, Instagram experienced a shift towards neutrality.
                 </p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                 <div class="stat-card">
-                    <h4 class="font-bold text-lg text-gray-800 mb-2">Instagram: The Shift to Neutral</h4>
-                    <p class="text-sm text-gray-600 mb-4">From 2020 to 2024, Instagram discourse saw a significant drop in positive posts and a corresponding rise in neutral ones, suggesting a move away from overt positivity towards caution or uncertainty.</p>
-                    <div class="flex justify-around text-center">
-                        <div>
-                            <p class="text-3xl font-bold text-green-600">38% <span class="text-xl text-gray-500">→</span> 29%</p>
-                            <p class="text-sm font-medium text-gray-500">Positive</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Instagram: The Shift to Neutral</h3>
+                        <p style="margin-bottom: 20px; opacity: 0.8;">From 2020 to 2024, Instagram discourse saw a significant drop in positive posts and a corresponding rise in neutral ones.</p>
+                        <div style="display: flex; justify-content: space-around; text-align: center;">
+                            <div>
+                                <div style="font-size: 2rem; font-weight: bold; color: #10b981;">38% → 29%</div>
+                                <div style="opacity: 0.7;">Positive</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: bold; color: #6b7280;">44% → 58%</div>
+                                <div style="opacity: 0.7;">Neutral</div>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-3xl font-bold text-gray-600">44% <span class="text-xl text-gray-500">→</span> 58%</p>
-                             <p class="text-sm font-medium text-gray-500">Neutral</p>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <canvas id="instagramSentimentChart"></canvas>
                         </div>
-                    </div>
-                </div>
-                <div class="chart-container bg-white p-4 rounded-lg shadow-md border border-gray-100">
-                    <canvas id="instagramSentimentChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <section id="methods" class="scroll-mt-20">
-             <div class="text-center mb-12">
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-900">Methods and Inherent Challenges</h3>
-                <p class="mt-2 max-w-3xl mx-auto text-md text-gray-500">
-                    Analyzing sentiment is complex. Researchers use sophisticated tools, but face challenges like sarcasm, data bias, and misinformation. Understanding these limitations is key to correctly interpreting the findings. Click each challenge to learn more.
-                </p>
-            </div>
-            <div class="max-w-4xl mx-auto space-y-4">
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-gray-800">
-                        <span>1. Complexity of Human Language</span>
-                        <span class="accordion-icon text-blue-600 text-2xl font-light">↓</span>
-                    </button>
-                    <div class="accordion-content">
-                        <p class="p-4 pt-0 text-gray-600">Emotions are expressed with sarcasm, idioms, and cultural references that are difficult for algorithms to accurately detect. The informal language, slang, and misspellings common on social media add another layer of complexity, making it hard to distinguish genuine sentiment from noise.</p>
-                    </div>
-                </div>
-                 <div class="bg-white rounded-lg border border-gray-200">
-                    <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-gray-800">
-                        <span>2. Bias in Data and Models</span>
-                        <span class="accordion-icon text-blue-600 text-2xl font-light">↓</span>
-                    </button>
-                    <div class="accordion-content">
-                        <p class="p-4 pt-0 text-gray-600">Models are trained on existing data, which can contain biases. This can lead to skewed predictions that misclassify sentiment in underrepresented groups or amplify stereotypes. Furthermore, most research is limited to English-language text, restricting its global applicability.</p>
-                    </div>
-                </div>
-                 <div class="bg-white rounded-lg border border-gray-200">
-                    <button class="accordion-button w-full flex justify-between items-center text-left p-4 font-semibold text-gray-800">
-                        <span>3. The "Infodemic" and Misinformation</span>
-                        <span class="accordion-icon text-blue-600 text-2xl font-light">↓</span>
-                    </button>
-                    <div class="accordion-content">
-                        <p class="p-4 pt-0 text-gray-600">The rapid spread of fake news and incorrect information during the pandemic significantly distorted public discourse. Sentiment analysis can capture reactions to this misinformation, potentially leading to misleading conclusions about genuine public opinion regarding the crisis and official responses.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Methods and Inherent Challenges</h2>
+                <p class="section-subtitle">
+                    Analyzing sentiment is complex. Understanding these limitations is key to correctly interpreting the findings.
+                </p>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            <span>1. Complexity of Human Language</span>
+                            <span class="accordion-icon">↓</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-text">Emotions are expressed with sarcasm, idioms, and cultural references that are difficult for algorithms to accurately detect. The informal language, slang, and misspellings common on social media add another layer of complexity.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            <span>2. Bias in Data and Models</span>
+                            <span class="accordion-icon">↓</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-text">Models are trained on existing data, which can contain biases. This can lead to skewed predictions that misclassify sentiment in underrepresented groups or amplify stereotypes.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            <span>3. The "Infodemic" and Misinformation</span>
+                            <span class="accordion-icon">↓</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-text">The rapid spread of fake news and incorrect information during the pandemic significantly distorted public discourse, potentially leading to misleading conclusions about genuine public opinion.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-gray-800 text-white mt-16 md:mt-24">
-        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm">
-            <p>Interactive visualization based on the report "Analysis of Social Media Post Sentiment Shifts Before and After the COVID-19 Pandemic."</p>
-            <p class="text-gray-400 mt-1">Created for educational and informational purposes.</p>
+    <footer class="footer">
+        <div class="container">
+            <p>Interactive visualization based on the report <a href="COVID_ Pre-Post Sentiment Analysis_.pdf" target="_blank">"Analysis of Social Media Post Sentiment Shifts Before and After the COVID-19 Pandemic."</a></p>
+            <p style="opacity: 0.6; margin-top: 10px;">Created for educational and informational purposes.</p>
         </div>
     </footer>
 
@@ -299,21 +501,17 @@
                 const contentArea = document.getElementById('topic-content-area');
                 
                 let statsHtml = data.stats.map(stat => `
-                    <div class="text-center">
-                        <p class="text-3xl md:text-4xl font-bold text-blue-600">${stat.value}</p>
-                        <p class="text-md font-semibold text-gray-700 mt-2">${stat.label}</p>
-                        <p class="text-sm text-gray-500 mt-1">${stat.sub}</p>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: var(--primary-color); margin-bottom: 10px;">${stat.value}</div>
+                        <div style="font-size: 1.1rem; font-weight: 500; margin-bottom: 5px;">${stat.label}</div>
+                        <div style="opacity: 0.7;">${stat.sub}</div>
                     </div>
                 `).join('');
 
                 contentArea.innerHTML = `
-                    <div class="text-center mb-8">
-                        <h4 class="font-bold text-xl text-gray-800">${data.title}</h4>
-                        <p class="text-md text-gray-600 mt-2 max-w-2xl mx-auto">${data.description}</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        ${statsHtml}
-                    </div>
+                    <div class="topic-title">${data.title}</div>
+                    <div class="topic-description">${data.description}</div>
+                    <div class="topic-stats">${statsHtml}</div>
                 `;
             }
 
@@ -328,6 +526,10 @@
 
             renderTopicContent('learning');
             
+            // Chart.js styling for dark theme
+            Chart.defaults.color = '#fdfdfd';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+            
             const ctxReddit = document.getElementById('redditSentimentChart');
             if(ctxReddit) {
                 new Chart(ctxReddit, {
@@ -338,16 +540,16 @@
                             label: 'Higher Odds of Negative Sentiment vs. 2019',
                             data: [0, 25, 7.3, 6.3],
                             backgroundColor: [
-                                'rgba(107, 114, 128, 0.6)',
-                                'rgba(239, 68, 68, 0.6)',
-                                'rgba(239, 68, 68, 0.4)',
-                                'rgba(239, 68, 68, 0.3)'
+                                'rgba(253, 253, 253, 0.6)',
+                                'rgba(232, 67, 66, 0.8)',
+                                'rgba(232, 67, 66, 0.6)',
+                                'rgba(232, 67, 66, 0.4)'
                             ],
                             borderColor: [
-                                'rgba(107, 114, 128, 1)',
-                                'rgba(239, 68, 68, 1)',
-                                'rgba(239, 68, 68, 0.8)',
-                                'rgba(239, 68, 68, 0.7)'
+                                'rgba(253, 253, 253, 1)',
+                                'rgba(232, 67, 66, 1)',
+                                'rgba(232, 67, 66, 0.8)',
+                                'rgba(232, 67, 66, 0.6)'
                             ],
                             borderWidth: 1
                         }]
@@ -363,14 +565,7 @@
                                 display: true,
                                 text: 'Change in Odds of Negative Sentiment on Reddit (vs. 2019)',
                                 font: { size: 16, weight: 'bold'},
-                                color: '#374151'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ` ${context.parsed.y}% higher odds of negative sentiment compared to 2019.`;
-                                    }
-                                }
+                                color: '#fdfdfd'
                             }
                         },
                         scales: {
@@ -378,7 +573,16 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Odds Increase (%)'
+                                    text: 'Odds Increase (%)',
+                                    color: '#fdfdfd'
+                                },
+                                grid: {
+                                    color: 'rgba(255,255,255,0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255,255,255,0.1)'
                                 }
                             }
                         }
@@ -396,15 +600,15 @@
                             {
                                 label: 'Pre-Pandemic (Early 2020)',
                                 data: [38.35, 44.19],
-                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                                borderColor: 'rgba(59, 130, 246, 1)',
+                                backgroundColor: 'rgba(232, 67, 66, 0.6)',
+                                borderColor: 'rgba(232, 67, 66, 1)',
                                 borderWidth: 1
                             },
                             {
                                 label: 'Post-Pandemic (2024)',
                                 data: [28.69, 58.34],
-                                backgroundColor: 'rgba(107, 114, 128, 0.5)',
-                                borderColor: 'rgba(107, 114, 128, 1)',
+                                backgroundColor: 'rgba(253, 253, 253, 0.6)',
+                                borderColor: 'rgba(253, 253, 253, 1)',
                                 borderWidth: 1
                             }
                         ]
@@ -417,20 +621,11 @@
                                 display: true,
                                 text: 'Instagram Sentiment Shift: 2020 vs. 2024',
                                 font: { size: 16, weight: 'bold' },
-                                color: '#374151'
+                                color: '#fdfdfd'
                             },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y.toFixed(2) + '%';
-                                        }
-                                        return label;
-                                    }
+                            legend: {
+                                labels: {
+                                    color: '#fdfdfd'
                                 }
                             }
                          },
@@ -439,7 +634,16 @@
                                  beginAtZero: true,
                                  title: {
                                      display: true,
-                                     text: 'Percentage of Posts (%)'
+                                     text: 'Percentage of Posts (%)',
+                                     color: '#fdfdfd'
+                                 },
+                                 grid: {
+                                     color: 'rgba(255,255,255,0.1)'
+                                 }
+                             },
+                             x: {
+                                 grid: {
+                                     color: 'rgba(255,255,255,0.1)'
                                  }
                              }
                          }
@@ -453,41 +657,6 @@
                     button.classList.toggle('open');
                 });
             });
-
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('section[id]');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href').substring(1) === entry.target.id) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, { rootMargin: "-50% 0px -50% 0px" });
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-            
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    if (mobileMenu.classList.contains('hidden') === false) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            });
-
         });
     </script>
 </body>
