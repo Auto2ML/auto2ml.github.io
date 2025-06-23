@@ -307,6 +307,97 @@ body {
     cursor: pointer;
 }
 
+/* KineticTab Specific Styles */
+.kinetic-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.kinetic-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.kinetic-header h1 {
+    color: var(--primary-color, #333);
+    font-family: var(--heading-font, inherit);
+    margin-bottom: 10px;
+}
+
+.kinetic-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.kinetic-controls label {
+    font-weight: 500;
+    color: var(--text-color, #333);
+}
+
+.kinetic-controls input[type="range"] {
+    width: 150px;
+}
+
+.kinetic-controls input[type="number"] {
+    width: 80px;
+    padding: 5px;
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 4px;
+}
+
+.kinetic-controls button {
+    padding: 8px 16px;
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.kinetic-controls button:hover {
+    background-color: var(--primary-hover, #0056b3);
+}
+
+.kinetic-controls button:disabled {
+    background-color: var(--disabled-color, #6c757d);
+    cursor: not-allowed;
+}
+
+.kinetic-canvas-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.kinetic-canvas {
+    border: 2px solid var(--border-color, #ddd);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.kinetic-info {
+    background-color: var(--bg-light, #f8f9fa);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.kinetic-info h3 {
+    color: var(--primary-color, #333);
+    margin-bottom: 15px;
+}
+
+.kinetic-info p {
+    line-height: 1.6;
+    color: var(--text-color, #333);
+}
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2rem;
@@ -343,5 +434,18 @@ body {
     .form-group textarea {
         padding: 12px 15px;
         font-size: 14px;
+    }
+    
+    .kinetic-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .kinetic-controls input[type="range"] {
+        width: 200px;
+    }
+    
+    .kinetic-container {
+        padding: 10px;
     }
 }
