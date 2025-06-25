@@ -26,40 +26,42 @@
             </div>
         </header>
         
-        <section class="timer-settings card">
-            <h2 data-i18n="settingsTitle"><i class="fas fa-cog"></i> Reminder Settings</h2>
-            <div class="form-group">
-                <label for="interval" data-i18n="intervalLabel">Reminder Interval (minutes):</label>
-                <input type="number" id="interval" min="5" max="120" value="20" class="modern-input">
-            </div>
-            <div class="form-group toggle-container">
-                <label for="notifications" data-i18n="notificationsLabel">Enable Notifications:</label>
-                <label class="switch">
-                    <input type="checkbox" id="notifications" checked>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="button-group">
-                <button id="save-settings" class="btn btn-secondary" data-i18n="saveButton"><i class="fas fa-save"></i> Save Settings</button>
-                <button id="start-timer" class="btn btn-primary pulse" data-i18n="startButton"><i class="fas fa-play"></i> Start Reminders</button>
-                <button id="stop-timer" class="btn btn-danger" disabled data-i18n="stopButton"><i class="fas fa-stop"></i> Stop Reminders</button>
-            </div>
-        </section>
-        
-        <section class="body-display card">
-            <h2 data-i18n="focusAreaTitle"><i class="fas fa-bullseye"></i> Current Focus Area</h2>
-            <div id="body-container" class="body-visualization">
-                <!-- SVG will be inserted here -->
-            </div>
-            <div id="movement-suggestion" class="suggestion-container">
-                <h3 data-i18n="suggestionTitle"><i class="fas fa-lightbulb"></i> Movement Suggestion</h3>
-                <p id="suggestion-text" class="suggestion-text" data-i18n="startTimerPrompt">Start the timer to get movement suggestions</p>
-            </div>
-        </section>
+        <div class="main-content">
+            <section class="timer-settings card">
+                <h2 data-i18n="settingsTitle"><i class="fas fa-cog"></i> Reminder Settings</h2>
+                <div class="form-group">
+                    <label for="interval" data-i18n="intervalLabel">Reminder Interval (minutes):</label>
+                    <input type="number" id="interval" min="5" max="120" value="20" class="modern-input">
+                </div>
+                <div class="form-group toggle-container">
+                    <label for="notifications" data-i18n="notificationsLabel">Enable Notifications:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="notifications" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button id="save-settings" class="btn btn-secondary" data-i18n="saveButton"><i class="fas fa-save"></i> Save Settings</button>
+                    <button id="start-timer" class="btn btn-primary pulse" data-i18n="startButton"><i class="fas fa-play"></i> Start Reminders</button>
+                    <button id="stop-timer" class="btn btn-danger" disabled data-i18n="stopButton"><i class="fas fa-stop"></i> Stop Reminders</button>
+                </div>
+            </section>
+            
+            <section class="body-display card">
+                <h2 data-i18n="focusAreaTitle"><i class="fas fa-bullseye"></i> Current Focus Area</h2>
+                <div id="body-container" class="body-visualization">
+                    <!-- SVG will be inserted here -->
+                </div>
+                <div id="movement-suggestion" class="suggestion-container">
+                    <h3 data-i18n="suggestionTitle"><i class="fas fa-lightbulb"></i> Movement Suggestion</h3>
+                    <p id="suggestion-text" class="suggestion-text" data-i18n="startTimerPrompt">Start the timer to get movement suggestions</p>
+                </div>
+            </section>
+        </div>
 
         <footer class="app-footer">
             <a href="#" id="disclaimer-link" class="footer-link" data-i18n="disclaimerLink"><i class="fas fa-info-circle"></i> Medical Disclaimer</a>
-            <p class="copyright">© 2025 KineticTab</p>
+            <p class="copyright">© 2025 Auto²ML</p>
         </footer>
     </div>
     
