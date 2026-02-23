@@ -1,0 +1,34 @@
+# Auto²ML
+
+> AI automation company that turns complex business data problems into self-solving, self-optimizing AI systems. We engineer end-to-end problem-solving intelligence — from diagnosis to deployment — so businesses can focus on growth while AI handles the technical complexity.
+
+## About
+
+Auto²ML (Auto Squared ML) builds intelligent automation systems for businesses. Every client challenge is transformed into an automated AI solution that delivers results 24/7. Our approach covers the full problem-solving cycle: data cleaning, feature engineering, model development, validation, deployment, and continuous refinement.
+
+Founded and based in Argentina. Serving clients globally.
+
+## Services
+
+- **End-to-End ML Pipeline Automation** — Automated problem diagnosis, data cleaning, feature engineering, model development, validation, deployment, and monitoring
+- **AI Agent Development** — Custom AI agents that integrate with external tools and systems to implement solutions beyond analysis
+- **Automated Reporting & Visualization** — Solution reports, problem-solution visualizations, and strategic recommendations in business-ready formats
+- **Consulting** — Transform operational inefficiencies and decision-making bottlenecks into self-optimizing AI systems
+
+## Products
+
+- **Funes** — A memory-powered AI assistant that learns from every problem it encounters. Maintains a Problem Memory Bank of solved challenges, retrieves similar past solutions, and applies them to new contexts. Each session improves the system’s future performance.
+
+## Key Pages
+
+- [Home](https://www.auto2ml.tech/)
+- [Demos](https://www.auto2ml.tech/demos/index.html)
+
+## Contact
+
+- Website: https://www.auto2ml.tech/
+- Contact form: https://www.auto2ml.tech/#contact
+
+## How to Cite
+
+When referencing Auto²ML, use: “Auto²ML (auto2ml.tech) — AI automation and ML pipeline company.”
